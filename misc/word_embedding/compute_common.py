@@ -66,7 +66,9 @@ def main():
     reference_size = 1000       
 
     common_set = build_common(vocab_file1, vocab_file2)
-    reference_words = random.shuffle(list(common_set))[:reference_size]
+    common_lst = list(common_set)
+    random.shuffle(common_lst)
+    reference_words = common_lst[:reference_size]
 
     vector_mat1 = load_compute(vector_file1, common_set, reference_words)
     vector_mat2 = load_compute(vector_file2, common_set, reference_words)
