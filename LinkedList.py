@@ -1,8 +1,7 @@
 # When writing sorting toy examples, a linked list can be used to insert an element 
-# into a sorted sublist. It may not be always the case because there are arguements on
-# the efficiency of linked list is worse than array.
+# into a sorted sublist. 
 # I just add a simple implementation of Linked List for later use.
-# A linked list consists of a list of node. 
+# A linked list consists of a list of nodes. 
 #
 # Author: Sen Jia
 #
