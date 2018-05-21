@@ -103,11 +103,11 @@ class NeuralNetwork:
         batch=[]
         for i in range(self._batch_size):
             try:
-                sample = self._batch_iter.next()
+                sample = self._batch_iter.__next__()
             except:
                 random.shuffle(trainingSet)
                 self._batch_iter = iter(trainingSet)
-                sample = self._batch_iter.next()
+                sample = self._batch_iter.__next__()
             batch.append(sample)
         return batch
 
@@ -121,6 +121,7 @@ class NeuralNetwork:
         trainingSet = wholeSet[:train_size]
         testSet = wholeSet[train_size:]
         self._batch_iter = iter(trainingSet)
+        
         while iter_counter < self._max_iters:
             batch = self.batch_iterator(trainingSet)
             loss = 0
@@ -166,7 +167,7 @@ def main():
     data = load_iris()
     feat = data.data
     label = data.target
-    wholeSet = zip(feat,label)
+    wholeSet = list(zip(feat,label))
 
     layers = []
     input_dim = 4
