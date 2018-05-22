@@ -15,33 +15,33 @@ from sklearn.datasets import load_iris
 class OP:
     @staticmethod
     def norm_init(num):
-        return np.random.normal(0,0.1,num)
+        return np.random.normal(0, 0.1, num)
     
     @staticmethod
-    def sigmoid(x,derivative=False):
+    def sigmoid(x, derivative=False):
         if not derivative:
             return 1 / (1 + np.exp(-x))
         else:
             return x * (1 - x)
 
     @staticmethod
-    def squared_error(output,target):
+    def squared_error(output, target):
         loss = output - target
-        loss = np.sum(np.power(loss,2))
+        loss = np.sum(np.power(loss, 2))
         return loss
 
 class Layer:
-    def __init__(self,num,prev_num,init_method):
+    def __init__(self, num, prev_num, init_method):
         """
         Initialising a layer, weigths and weight_deltas are in the size of i by j, where i is the number of units in previous layer and j is the number of units in current layer. Activations and loss are in the size of j by 1.
         """
-        self.weights = np.random.rand(prev_num,num)
+        self.weights = np.random.rand(prev_num, num)
         self.unit_delta = np.zeros_like(self.weights)
-        self.activations = np.zeros((num,1))
+        self.activations = np.zeros((num, 1))
         self.unit_loss = np.zeros_like(self.activations)
 
 class NeuralNetwork:
-    def __init__(self,layers,max_iters,lr_step,learning_rate=0.1,batch_size=32):
+    def __init__(self, layers, max_iters, lr_step, learning_rate=0.1, batch_size=32):
         """    
         initialise NN architecture except input layer. Each initialised layer contains a 1D array of activations, a 2D array of weights, a 1D array of loss and a 2D array of deltas.
         """
@@ -60,7 +60,7 @@ class NeuralNetwork:
                 self.layers.append(Layer(num,prev_num,OP.norm_init))  # initialise current layer, the number of neurons in the previous layer is required.
         self.num_class = layers[-1]
 
-    def forward(self,inputs,actFunc):
+    def forward(self, inputs, actFunc):
         """
         Computing forward pass, derivative is set to false.
         """
@@ -73,7 +73,7 @@ class NeuralNetwork:
                 netV = np.dot(inputs,layer.weights)
             layer.activations = actFunc(netV)
 
-    def backward(self,inputs,output,target,actFunc):
+    def backward(self, inputs, output, target, actFunc):
         """
         Computing backpropagation, derivative is set to true. Both the loss for each unit and the delta for each weight are computed within this method.
         """
@@ -86,20 +86,18 @@ class NeuralNetwork:
                 next_layer = self.layers[i+1]
                 self.layers[i].unit_loss = np.multiply(sig_prime,np.dot(next_layer.weights,next_layer.unit_loss))
 
-
             if i == 0: # compute delta for the first layer.
                 self.layers[i].unit_delta = np.add(self._eta*np.outer(inputs,self.layers[i].unit_loss),self.layers[i].unit_delta)
             else:
                 self.layers[i].unit_delta = np.add(self._eta*np.outer(self.layers[i-1].activations,self.layers[i].unit_loss),self.layers[i].unit_delta)
-
                
-    def update(self,num_sample):
+    def update(self, num_sample):
         for i in range(len(self.layers)):
             self.layers[i].unit_delta /= float(num_sample)
             self.layers[i].weights += self.layers[i].unit_delta
             self.layers[i].unit_delta.fill(0.)
 
-    def batch_iterator(self,trainingSet):
+    def batch_iterator(self, trainingSet):
         batch=[]
         for i in range(self._batch_size):
             try:
@@ -111,7 +109,7 @@ class NeuralNetwork:
             batch.append(sample)
         return batch
 
-    def run(self,wholeSet):
+    def run(self, wholeSet):
         counter = 0
         iter_counter = 0
         total_num = len(wholeSet)
@@ -147,13 +145,13 @@ class NeuralNetwork:
             if iter_counter%self._lr_step == 0:
                 self._eta *= 0.1
 
-    def test(self,testSet):
+    def test(self, testSet):
         correct = 0.0
         error = 0.0
         for sample in testSet:
             feat, label = sample[0], sample[1]
             inputs = np.array(feat)
-            self.forward(inputs,OP.sigmoid)
+            self.forward(inputs, OP.sigmoid)
             output = self.layers[-1].activations
             prediction = output.argmax()
             if prediction == label:
