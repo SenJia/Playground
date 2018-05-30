@@ -133,6 +133,7 @@ class RNNModel(object):
             for j in reversed(range(t)):
                 dhraw = np.dot(self._Whh, dhraw)
                 dhraw = dhraw * (1 - hs[j] * hs[j])
+                #print (t, j, np.linalg.norm(dhraw)) this is why it is difficult for RNN to remember long memory.
                 dWxh += np.dot(dhraw, xs[j].T)
 
                 dWhh += np.dot(dhraw, hs[j-1].T)
