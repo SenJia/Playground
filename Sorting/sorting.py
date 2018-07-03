@@ -23,21 +23,21 @@ def cocktail_sort(lst):
     Aka bidirectional bubble sort, stable.
     Time complexity for the worst case is O(n^2), O(n) for average. Space complexity O(1). 
     """
-    beginIdx=0
-    endIdx=len(lst)-1
+    beginIdx = 0
+    endIdx = len(lst)-1
     while beginIdx <= endIdx:
         newBeginIdx = endIdx
         newEndIdx = beginIdx
         for i in range(beginIdx,endIdx):
             if lst[i] > lst[i+1]:
                 lst[i], lst[i+1] = lst[i+1], lst[i]
-                newEndIdx=i
+                newEndIdx = i
         endIdx = newEndIdx  
         for i in range(endIdx,beginIdx-1,-1):
             if lst[i] > lst[i+1]:
                 lst[i], lst[i+1] = lst[i+1], lst[i]
                 newBeginIdx = i
-        beginIdx=newBeginIdx
+        beginIdx = newBeginIdx
     return lst
  
 def odd_even_sort(lst):
@@ -46,51 +46,58 @@ def odd_even_sort(lst):
     Processing odd-indexed and even-indexed element simultaneously.
     Time complexity depends on the number of threads. Space complexity O(1). Stable.
     """
-    lst_sorted=False
+    lst_sorted = False
     while not lst_sorted:
         lst_sorted = True
         for i in range(0, len(lst)-1,2):
             if lst[i] > lst[i+1]:
                 lst[i],lst[i+1] = lst[i+1],lst[i]
-                lst_sorted=False
+                lst_sorted = False
         for i in range(1, len(lst)-1,2):
             if lst[i] > lst[i+1]:
                 lst[i],lst[i+1] = lst[i+1],lst[i]
-                lst_sorted=False
+                lst_sorted = False
  
 def quick_sort(lst): 
     """
     Quick sort algorithm. This implementation costs space complexity O(n)
     """
-    length = len(lst)
-    if length <= 1: return lst
-    #choose the first element as the pivot
-    return quick_sort([x for x in lst[1:] if x < lst[0]]) + [lst[0]] + quick_sort([x for x in lst[1:] if x > lst[0]])
+    less, greater = [], []
+    if len(lst) <= 1: 
+        return lst
+    else:
+        pivot = lst[-1] # select the last element of the list as the pivot point.
+        for elem in lst[:-1]:
+            if elem < pivot:
+                less.append(elem)
+            else:
+                greater.append(elem)
+    return quick_sort(less) + [pivot] + quick_sort(greater)
  
-def quick_sort_inplace_recursive(lst,start,end):
+def quick_sort_inplace_recursive(lst, start, end):
     """
     In-place implementation of quick sort algorithm. Time complexity: O(n^2) for the worst and O(nLogn) for average. 
     Space complexity O(Logn). (Unstable)
     """
-    length = len(lst)
-    if length <= 1 or start >= end: return
-    pivotValue=lst[end]
-    right=end-1
-    left=start
+    if len(lst) <= 1 or start >= end: 
+        return
+    pivot = lst[end]
+    right = end-1
+    left = start
     while left < right:
-        while lst[left] < pivotValue and left < right:
-            left+=1
-        while lst[right] >= pivotValue and left < right:
-            right-=1
+        while lst[left] < pivot and left < right:
+            left += 1
+        while lst[right] >= pivot and left < right:
+            right -= 1
  
         lst[left], lst[right] = lst[right], lst[left]
  
     if lst[left] >= lst[end]:
         lst[left], lst[end] = lst[end], lst[left]
     else:
-        left+=1
-    quick_sort_inplace_recursive(lst,start,left-1)
-    quick_sort_inplace_recursive(lst,left+1,end)
+        left += 1
+    quick_sort_inplace_recursive(lst, start, left-1)
+    quick_sort_inplace_recursive(lst, left+1, end)
  
  
 def selection_sort(lst):
@@ -98,9 +105,9 @@ def selection_sort(lst):
     Time complexity O(n^2). Space complexity O(1).Unstable(but there is a stable variant.)
     """
     for i in range(len(lst)):
-        minimum=lst[i]
-        min_index=i
-        for j in range(i+1,len(lst)):
+        minimum = lst[i]
+        min_index = i
+        for j in range(i+1, len(lst)):
             if minimum > lst[j]:
                 minimum = lst[j]
                 min_index = j
@@ -112,16 +119,14 @@ def stable_selection_sort(lst):
     This is a stable implementation of selection sort using insertion rather than swapping.
     """
     for i in range(len(lst)):
-        minimum=lst[i]
-        min_index=i
+        minimum = lst[i]
+        min_index = i
         for j in range(i+1,len(lst)):
             if minimum > lst[j]:
                 minimum = lst[j]
                 min_index = j
         del lst[min_index]
         lst.insert(i,minimum)
- 
- 
  
 def counting_sort(lst):
     """
@@ -133,7 +138,7 @@ def counting_sort(lst):
     k=0
     for x in lst:
         LOOKUP.setdefault(x,0)+1
-        LOOKUP[x]+=1
+        LOOKUP[x] += 1
         if x > k:
             k = x
     total=0
@@ -146,10 +151,9 @@ def counting_sort(lst):
             total += oldCount
     ans=[0]*len(lst)
     for x in lst:
-        ans[LOOKUP[x]]=x
-        LOOKUP[x]+=1
+        ans[LOOKUP[x]] = x
+        LOOKUP[x] += 1
     return ans
- 
  
 def insertion_sort(lst):
     """
@@ -175,11 +179,11 @@ def linked_list_insertion_sort(lst):
     Python built-in list is array, pretending we have linked list here.
     """
     for i in range(1,len(lst)):
-        temp=lst[i]
+        temp = lst[i]
         lst.pop(i)     # delete the current node from the list (I know it is not linked list here.. )
         j = i - 1
         while j > 0 and lst[j] > temp:
-            j-=1
+            j -= 1
         lst.insert(j,temp) # insert a node for the current element to the right place.
  
 def gnome_sort(lst):
@@ -190,13 +194,13 @@ def gnome_sort(lst):
     Comparing with insertion sort, after poping up an element, 
     it requires several comparisons to move back to the cursor location.
     """
-    pos=0
+    pos = 0
     while pos < len(lst):
         if pos == 0 or lst[pos] >= lst[pos-1]:
-            pos+=1
+            pos += 1
         else:
             lst[pos], lst[pos-1] = lst[pos-1], lst[pos]
-            pos-=1
+            pos -= 1
  
 def shell_sort(lst):
     """
@@ -207,9 +211,9 @@ def shell_sort(lst):
     Average time complexity depends on the chosen gap. Worst time complexity O(nLog^2n). Space O(1). Unstable.
     """
     N = len(lst)
-    gaps = [N/(2**x) for x in range(1,N) if 2**x < N]   # x < Log2(N)
+    gaps = [int(N/(2**x)) for x in range(1,N) if 2**x < N]   # x < Log2(N)
     for gap in gaps:
-        for i in range(gap,N):
+        for i in range(gap, N):
             temp = lst[i]
             j = i
             while j >= gap and lst[j - gap] > temp:
@@ -237,7 +241,9 @@ def comb_sort(lst):
                 swapped = True
             i += 1
 
-def stooge_sort(lst,i,j):
+def stooge_sort(lst, start, length):
+    i = start
+    j = length
     """
     An inefficient recursive sorting algorithm.
     Sorting first 2/3, then last 2/3, then first 2/3.....
@@ -246,11 +252,11 @@ def stooge_sort(lst,i,j):
     if lst[j] < lst[i]:
         lst[i], lst[j] = lst[j], lst[i]
     if j - i + 1 > 2:
-        t = (j - i + 1) / 3
-        stoogesort(lst,i,j-t)
-        stoogesort(lst,i+t,j)
-        stoogesort(lst,i,j-t)
-    return lst
+        t = int((j - i + 1) / 3)
+        stooge_sort(lst, i, j-t)
+        stooge_sort(lst, i+t, j)
+        stooge_sort(lst, i, j-t)
+    #return lst
 
 def cycle_sort(lst):
     """
@@ -259,10 +265,11 @@ def cycle_sort(lst):
     the right place and take the replaced item as current.
     Time O(n^2). Space O(1). Unstable
     """
+
     for start in range(len(lst)-1):
         item = lst[start]
         pos = start
-        for i in range(start+1,len(lst)):
+        for i in range(start+1, len(lst)):
             if lst[i] < item:
                 pos += 1
         if pos == start:
@@ -276,7 +283,6 @@ def cycle_sort(lst):
             for i in range(start+1, len(lst)):
                 if lst[i] < item:
                     pos += 1
-
             while item == lst[pos]:
                 pos += 1
             lst[pos], item = item, lst[pos]
@@ -291,14 +297,14 @@ def merge_sort_recursive(lst):
     """
     if len(lst) <= 1:
         return lst
-    
+
     def merge(left, right):
         merged = []
         while left and right:
             merged.append(left.pop(0) if left[0] < right[0] else right.pop(0))
         merged.extend(left if left else right)
         return merged
-        
+
     middle = int(len(lst) // 2)
     left = merge_sort_recursive(lst[:middle])
     right = merge_sort_recursive(lst[middle:])
@@ -306,9 +312,9 @@ def merge_sort_recursive(lst):
 
 
 def main():
-    input_lst = range(50,0,-1)
-    lst = merge_sort_recursive(input_lst)
-    print lst
-    
- 
+    input_lst = list(range(50, 0, -1))
+    #lst = merge_sort_recursive(input_lst)
+    quick_sort_inplace_recursive(input_lst, 0, len(input_lst)-1)
+    print (input_lst)
+
 if __name__ == "__main__": main()
